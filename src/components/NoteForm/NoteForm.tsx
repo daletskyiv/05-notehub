@@ -17,6 +17,11 @@ export interface FormValues {
 
 type TagValues = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
 
+type MutationVariables = {
+  values: FormValues;
+  actions: FormikHelpers<FormValues>;
+};
+
 const initialValues: FormValues = {
   title: '',
   content: '',
@@ -24,8 +29,8 @@ const initialValues: FormValues = {
 };
 
 const noteFormSchema = Yup.object().shape({
-  title: Yup.string().min(2).max(50).required(),
-  content: Yup.string().max(50),
+  title: Yup.string().min(3).max(50).required(),
+  content: Yup.string().max(500),
   tag: Yup.string()
     .oneOf(['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'])
     .required(),
@@ -34,9 +39,10 @@ const noteFormSchema = Yup.object().shape({
 export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: (values: FormValues) => createNote(values),
-    onSuccess: () => {
+    mutationFn: ({ values }: MutationVariables) => createNote(values),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      variables.actions.resetForm();
       toast.success('Note added successfully!');
       onClose();
     },
@@ -49,8 +55,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     values: FormValues,
     actions: FormikHelpers<FormValues>,
   ) {
-    mutate(values);
-    actions.resetForm();
+    mutate({ values, actions });
   }
 
   return (

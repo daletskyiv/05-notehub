@@ -21,13 +21,11 @@ export async function fetchNotes(
   return data;
 }
 
-export async function createNote(
-  values: FormValues,
-): Promise<FetchNotesResponse> {
-  const { data } = await axios.post<FetchNotesResponse>('/notes', values);
+export async function createNote(values: FormValues): Promise<Note> {
+  const { data } = await axios.post<Note>('/notes', values);
   return data;
 }
-export async function deleteNote(id: string): Promise<FetchNotesResponse> {
-  const { data } = await axios.delete<FetchNotesResponse>(`/notes/${id}`);
+export async function deleteNote(id: string): Promise<Note> {
+  const { data } = await axios.delete<Note>(`/notes/${id}`);
   return data;
 }

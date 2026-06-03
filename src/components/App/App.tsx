@@ -13,6 +13,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import LoadingMessage from '../LoadingMessage/LoadingMessage';
 import { Toaster } from 'react-hot-toast';
 import { useState } from 'react';
+import SearchBox from '../SearchBox/SearchBox';
 
 export default function App() {
   const [page, setPage] = useState(1);
@@ -53,14 +54,7 @@ export default function App() {
       <Toaster position="top-center" reverseOrder={false} />
 
       <header className={css.toolbar}>
-        <input
-          className={css.input}
-          type="text"
-          placeholder="Search notes"
-          defaultValue={query}
-          onChange={updateSearchQuery}
-        />
-
+        <SearchBox query={query} updateSearchQuery={updateSearchQuery} />
         {totalPages > 0 && (
           <Pagination
             totalPages={totalPages}
@@ -68,7 +62,6 @@ export default function App() {
             setPage={handleChangePage}
           />
         )}
-
         <button className={css.button} onClick={openModal}>
           Create note +
         </button>
