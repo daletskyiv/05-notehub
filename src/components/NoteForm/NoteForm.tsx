@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import css from './NoteForm.module.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '../../services/noteService';
+import toast from 'react-hot-toast';
 
 interface NoteFormProps {
   onClose: () => void;
@@ -36,7 +37,11 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     mutationFn: (values: FormValues) => createNote(values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      toast.success('Note added successfully!');
       onClose();
+    },
+    onError: () => {
+      toast.error('Oops, something went wrong. Note not added');
     },
   });
 
